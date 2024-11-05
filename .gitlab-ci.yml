@@ -1,0 +1,21 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  image: node:14
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - build/
+
+deploy:
+  stage: deploy
+  image: amazon/aws-cli
+  script:
+    - aws s3 sync build/ s3://daivabucket --delete
+  only:
+    - master
